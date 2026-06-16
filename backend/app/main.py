@@ -59,11 +59,12 @@ def analyze_area(lat: float, lon: float, past_year: int = 2016, area_name: str =
         
         # 1. Past Data
         img_past = get_satellite_data(lat, lon, f"{past_year}-01-01", f"{past_year}-12-31")
-        greenery_past = calculate_greenery(img_past)
+        greenery_past= calculate_greenery(img_past, lat, lon)
         
         # 2. Present Data (Current Year)
         img_present = get_satellite_data(lat, lon, f"{present_year}-01-01", f"{present_year}-12-31")
-        greenery_present = calculate_greenery(img_present)
+        greenery_present= calculate_greenery(img_present, lat, lon)
+
         
         # 3. AI Comparison
         comparison_text = f"Greenery in {past_year} was {greenery_past}%, and in {present_year} it is {greenery_present}%."

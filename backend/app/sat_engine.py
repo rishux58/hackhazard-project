@@ -1,8 +1,8 @@
 import ee
 from google.oauth2.service_account import Credentials
 import os
-# Initialize the Earth Engine API
 
+# Initialize the Earth Engine API
 def initialize_gee():
     try:
         # File dhoondhne ka smart tareeka (Local aur Cloud dono ke liye)
@@ -32,18 +32,30 @@ def initialize_gee():
         
     except Exception as e:
         print(f"❌ GEE Init failed: {e}")
+
 # Example function to get image for an area
 def get_satellite_data(lat, lon, start_date, end_date):
-    point = ee.Geometry.Point([lon, lat])
+    point = ee.Geometry.Point([float(lon), float(lat)])
     collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_TOA') \
         .filterBounds(point) \
         .filterDate(start_date, end_date) \
-        .sort('CLOUD_COVER') \
-        .first()
-    return collection
+        .sort('CLOUD_COVER')
+    
+    # Agar data nahi mila us saal ka, toh crash na ho
+    if collection.size().getInfo() == 0:
+        return None
+        
+    return collection.first()
 
+# YAHAN CHANGE HAI: lat aur lon parameters add kiye hain geometry ke liye
+def calculate_greenery(image, lat, lon):
+    if image is None:
+        return 0.0 # Agar us saal ki image nahi mili toh 0%
 
-def calculate_greenery(image):
+    # 5km radius ka buffer banaya (Error hamesha ke liye khatam)
+    point = ee.Geometry.Point([float(lon), float(lat)])
+    region = point.buffer(5000)
+
     # NDVI Formula: (NIR - Red) / (NIR + Red)
     # Landsat 8 mein: Band 5 (NIR), Band 4 (Red)
     ndvi = image.normalizedDifference(['B5', 'B4']).rename('NDVI')
@@ -54,10 +66,15 @@ def calculate_greenery(image):
     # Poore area mein greenery ka mean (average) nikalna
     stats = greenery.reduceRegion(
         reducer=ee.Reducer.mean(),
-        geometry=image.geometry(),
+        geometry=region, # image.geometry() HATA DIYA HAI
         scale=30,
         maxPixels=1e9
     )
     
+    # Value nikalna aur crash se bachna
+    val = stats.getInfo().get('NDVI')
+    if val is None:
+        return 0.0
+        
     # Percentage mein convert karo
-    return stats.getInfo()['NDVI'] * 100
+    return round(val * 100, 2)
