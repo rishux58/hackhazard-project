@@ -1,17 +1,21 @@
 import ee
-
+from google.oauth2.service_account import Credentials
 # Initialize the Earth Engine API
 def initialize_gee():
-    # Yahan apne Google Cloud Project ka ID daalo jo tumne abhi banaya tha
-    project_id = 'hackhazard' 
-    
     try:
-        ee.Initialize(project=project_id)
-        print("GEE initialized successfully.")
+        # JSON key file ka path
+        SERVICE_ACCOUNT_FILE = 'gee_key.json' 
+        
+        # Service account se login karne ka logic
+        credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+        scoped_credentials = credentials.with_scopes(['https://www.googleapis.com/auth/earthengine'])
+        
+        # Earth Engine chalu karo
+        ee.Initialize(scoped_credentials)
+        print("✅ GEE Authenticated successfully on Cloud!")
+        
     except Exception as e:
-        print("Authentication required...")
-        ee.Authenticate()
-        ee.Initialize(project=project_id)
+        print(f"❌ GEE Init failed: {e}")
 # Example function to get image for an area
 def get_satellite_data(lat, lon, start_date, end_date):
     point = ee.Geometry.Point([lon, lat])
