@@ -39,7 +39,9 @@ export default function App() {
         setCoords([lat, lon]);
       }
 
-      
+      // 2. Tere backend par hit maaro
+      // Purana: const response = await axios.get(`http://127.0.0.1:8000/analyze`, { ...
+
 // Naya (Render wala):
 const response = await axios.get(`https://hackhazard-project.onrender.com/analyze`, {
   params: { lat: lat, lon: lon, past_year: year, area_name: locationName }
@@ -155,11 +157,11 @@ const response = await axios.get(`https://hackhazard-project.onrender.com/analyz
             <div className="flex flex-col gap-6">
               <div className="flex justify-between items-center bg-[#1c1c1c] p-4 rounded-xl border border-gray-600">
                 <span className="text-gray-400">Past Greenery ({data.past_year})</span>
-                <span className="text-2xl font-bold text-red-400">{data.past_greenery}%</span>
+                <span className="text-2xl font-bold text-white">{data.past_greenery}%</span>
               </div>
               <div className="flex justify-between items-center bg-[#1c1c1c] p-4 rounded-xl border border-gray-600">
                 <span className="text-gray-400">Present Greenery ({data.present_year})</span>
-                <span className="text-2xl font-bold text-green-400">{data.present_greenery}%</span>
+                <span className="text-2xl font-bold text-white">{data.present_greenery}%</span>
               </div>
               
               <div className="bg-[#1c1c1c] p-5 rounded-xl border border-gray-600">
