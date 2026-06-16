@@ -1,17 +1,33 @@
 import ee
 from google.oauth2.service_account import Credentials
+import os
 # Initialize the Earth Engine API
+
 def initialize_gee():
     try:
-        # JSON key file ka path
-        SERVICE_ACCOUNT_FILE = 'gee_key.json' 
+        # File dhoondhne ka smart tareeka (Local aur Cloud dono ke liye)
+        possible_paths = [
+            'gee_key.json',                     # Tere PC ke liye
+            'app/gee_key.json',                 # PC ka dusra path
+            '/etc/secrets/gee_key.json',        # Render ka hidden path
+            '/etc/secrets/app/gee_key.json'     # Render ka subfolder path
+        ]
         
-        # Service account se login karne ka logic
+        SERVICE_ACCOUNT_FILE = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                SERVICE_ACCOUNT_FILE = path
+                break
+        
+        if not SERVICE_ACCOUNT_FILE:
+            raise FileNotFoundError("Google Cloud JSON key Render par nahi mili!")
+
+        # Login karne ka logic
         credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
         scoped_credentials = credentials.with_scopes(['https://www.googleapis.com/auth/earthengine'])
         
         # Earth Engine chalu karo
-        ee.Initialize(scoped_credentials)
+        ee.Initialize(credentials=scoped_credentials)
         print("✅ GEE Authenticated successfully on Cloud!")
         
     except Exception as e:
