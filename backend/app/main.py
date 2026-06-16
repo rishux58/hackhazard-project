@@ -52,7 +52,7 @@ initialize_gee()
 
 
 @app.get("/analyze")
-def analyze_area(lat: float, lon: float, past_year: int = 2016, area_name: str = "Unknown"):
+def analyze_area(lat: float, lon: float, past_year: int , area_name: str):
     try:
         # Dynamic Year Detection
         present_year = datetime.now().year 
