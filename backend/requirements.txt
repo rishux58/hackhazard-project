@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pydantic
+requests
+neo4j
+earthengine-api
