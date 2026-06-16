@@ -40,9 +40,12 @@ export default function App() {
       }
 
       // 2. Tere backend par hit maaro
-      const response = await axios.get(`http://127.0.0.1:8000/analyze`, {
-        params: { lat: lat, lon: lon, past_year: year, area_name: locationName }
-      });
+      // Purana: const response = await axios.get(`http://127.0.0.1:8000/analyze`, { ...
+
+// Naya (Render wala):
+const response = await axios.get(`https://hackhazard-project.onrender.com/analyze`, {
+  params: { lat: lat, lon: lon, past_year: year, area_name: locationName }
+});
       
       setData(response.data);
     } catch (error) {
