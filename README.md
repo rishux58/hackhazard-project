@@ -45,4 +45,5 @@ hackhazard-project/
     │   └── index.css               # Tailwind styling
     └── package.json                # Frontend dependencies
 ```
-## Live link- https://hackhazard-project.vercel.app/
+## Live link
+- **Frontend:** https://hackhazard-project.vercel.app/
