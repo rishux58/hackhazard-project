@@ -44,3 +44,5 @@ hackhazard-project/
     │   ├── main.jsx                # App Entry point
     │   └── index.css               # Tailwind styling
     └── package.json                # Frontend dependencies
+```
+## Live link- https://hackhazard-project.vercel.app/
